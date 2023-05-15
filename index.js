@@ -4,7 +4,6 @@ const sequelize = require('./util/database');
 const bodyParser = require('body-parser');
 const cors = require("cors");
 
-
 const app = express();
 const http = require('http');
 const {Server} = require('socket.io');

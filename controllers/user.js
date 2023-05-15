@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const bcypt  = require('bcrypt');
 const saltRounds = 10;
+const {sign} = require('jsonwebtoken');
 
 //get all users
 exports.getUsers = (req, res) =>{
@@ -39,9 +40,13 @@ exports.loginUser = (req, res) => {
                     if(response){
                         const username = result[0].username;
                         const id = result[0].id;
-                        res.send({username: username, id: id});
+                        const accessToken = sign(
+                                {username: username, id:id}, 
+                                "importantsecret"
+                        );
+                        res.json(accessToken);
                     }else{
-                        res.send({message: 'Wrong Username or Password!'});
+                        res.status(404).json({message: 'Wrong Username or Password!'});
                         console.log(err);
                     }
                 });
