@@ -2,11 +2,11 @@
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
-    'dev',
-    'wulab',
-    'password',
+    process.env.PG_DB,
+    process.env.PG_USER,
+    process.env.PG_PASSORD,
     {
-        host: 'localhost',
+        host: process.env.PG_HOST,
         dialect:'postgres',
     },
     
