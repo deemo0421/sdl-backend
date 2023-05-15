@@ -14,7 +14,22 @@ exports.getProject = async(req, res) =>{
 
 exports.getAllProject = async(req, res) =>{
     const userId = req.query.userId;
-    console.log((await Project.findAll({ where:{id:userId},include: User })));
+    console.log(userId);
+    await Project.findAll({ 
+        include:[{
+            model:User,
+            attributes:[],
+            where :{
+                id:userId
+            },
+        }] 
+    })
+    .then(result =>{
+        console.log(result);
+        res.status(200).json(result)
+    })
+    .catch(err => console.log(err));
+
     
     // user.getProject()
     //     .then(result =>{
