@@ -44,7 +44,7 @@ exports.loginUser = (req, res) => {
                                 {username: username, id:id}, 
                                 "importantsecret"
                         );
-                        res.json(accessToken);
+                        res.json({accessToken, username, id});
                     }else{
                         res.status(404).json({message: 'Wrong Username or Password!'});
                         console.log(err);
