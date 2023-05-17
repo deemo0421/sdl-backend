@@ -6,6 +6,7 @@ const Process = require('./process');
 const Daily_personal = require('./daily_personal');
 const Daily_team = require('./daily_team');
 const Chatroom_message = require('./chatroom_message');
+const Kanban = require('./kanban');
 
 const Project = sequelize.define('project', {
     name: {
@@ -28,5 +29,6 @@ Project.hasMany(Idea_wall);
 Project.hasMany(Process);
 Project.hasMany(Daily_personal);
 Project.hasMany(Daily_team);
+Project.hasOne(Kanban);
 
 module.exports = Project;

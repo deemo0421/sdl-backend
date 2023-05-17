@@ -8,7 +8,7 @@ const Task = sequelize.define('task', {
         allowNull:false
     }, 
     content: {
-        type: DataTypes.JSONB,
+        type: DataTypes.STRING,
         allowNull:false
     },
     labels: {

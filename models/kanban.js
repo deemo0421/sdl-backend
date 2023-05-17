@@ -1,7 +1,6 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../util/database');
 const Column = require('./column');
-const Project = require('./project');
 
 const Kanban = sequelize.define('kanban', {
     column: {
@@ -11,7 +10,6 @@ const Kanban = sequelize.define('kanban', {
 });
 
 Kanban.hasMany(Column);
-Project.hasOne(Kanban);
 module.exports = Kanban;
 
 // (async () => {
