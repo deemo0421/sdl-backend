@@ -42,11 +42,14 @@ exports.createProject = async(req, res) =>{
     const projectName = req.body.projectName;
     const projectdescribe = req.body.projectdescribe;
     const projectMentor = req.body.projectMentor;
-    Project.create({
+    const userId = req.body.userId;
+    const createdProject = await Project.create({
         name: projectName,
         describe: projectdescribe,
         mentor: projectMentor
-    })
+    });
+    const creater = await User.findByPk(userId);
+    await createdProject.addUser(creater)
     .then(result =>{
         res.status(200).json({ project: result})
     })
