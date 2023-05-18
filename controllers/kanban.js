@@ -5,6 +5,7 @@ const Project = require('../models/project');
 
 exports.getKanban = async ( req, res ) => {
     const projectId = req.params.projectId;
+    //kanban
     const kanbanData = await Kanban.findAll({
         attributes:['id','column'],
         where:{
@@ -12,16 +13,38 @@ exports.getKanban = async ( req, res ) => {
         },
     })
     const { id, column } = kanbanData[0];
+    //column
     const columnData = await Column.findAll({
             attributes:['id','name','task'],
             where:{
                 kanbanId : id
             }
     })
-    .then( result => {
-        res.status(200).json(result);
+    console.log(columnData[0]);
+    //task
+    const taskData1 = await Task.findAll({
+        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        where:{
+            columnId : columnData[0].id
+        }
     })
-    // const columnData = await Column.findAll({ kanbanId : })
+    columnData[0].task = taskData1;
+    const taskData2 = await Task.findAll({
+        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        where:{
+            columnId : columnData[1].id
+        }
+    })
+    columnData[1].task = taskData2;
+    const taskData3 = await Task.findAll({
+        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        where:{
+            columnId : columnData[2].id
+        }
+    })
+    columnData[2].task = taskData3;
+    res.status(200).json(columnData);
+
 }
 
 exports.getKanbanTask = async ( req, res ) =>{

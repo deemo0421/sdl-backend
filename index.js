@@ -18,103 +18,6 @@ const io = new Server(server, {
     },
 });
 
-
-let kanbanData = [
-    {
-        "name":"ToDo",
-        "items": [
-            {
-                "id":1,
-                "title": "website redesign.",
-                "content":"dashboard",
-                "labels":[
-                    {
-                        "content":"優先處理",
-                        "bgcolor":"bg-blue-500",
-                        "textcolor":"text-white",
-                    }
-                ],
-                "assignees": [
-                    {
-                        "userId": "Wuret",
-                        "bgcolor":"bg-purple-100"
-                    },
-                    {
-                        "userId": "YY",
-                        "bgcolor":"bg-purple-50"
-                    }
-                ]
-            },
-            {
-                "id":2,
-                "title": "react",
-                "content":"cra is dead",
-                "labels":[
-    
-                ],
-                "assignees": [
-                    {
-                        "userId": "YY",
-                        "bgcolor":"bg-purple-50"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "name":"In Progress",
-        "items": [
-            {
-                "id":3,
-                "title": "vite",
-                "content":"veet",
-                "labels":[
-    
-                ],
-                "assignees": [
-                    {
-                        "userId": "YY",
-                        "bgcolor":"bg-purple-50"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "name":"Completed",
-        "items": [
-            {
-                "id":4,
-                "title": "react-beautiful-dnd",
-                "content":"react-beautiful-dnd",
-                "labels":[
-    
-                ],
-                "assignees": [
-                    {
-                        "userId": "Wuret",
-                        "bgcolor":"bg-purple-100"
-                    }
-                ]
-            },
-            {
-                "id":5,
-                "title": "react-dnd",
-                "content":"react-dnd",
-                "labels":[
-    
-                ],
-                "assignees": [
-                    {
-                        "userId": "Dnd",
-                        "bgcolor":"bg-purple-200"
-                    }
-                ]
-            }
-        ]
-    }
-];
-
 const ideaWall = {
     "nodes":[
         { id: 1, title: 'Node 1', content: 'brain not found'},
@@ -182,10 +85,6 @@ app.use('/users', require('./routes/user'));
 app.use('/projects', require('./routes/project'))
 app.use('/kanbans', require('./routes/kanban'))
 
-//to do ...
-app.get("/kanban", (req, res) => {
-    res.json(kanbanData);
-});
 app.get("/ideaWall", (req, res) => {
     res.json(ideaWall);
 });
