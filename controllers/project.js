@@ -1,6 +1,7 @@
 const Project = require('../models/project')
 const User = require('../models/user')
-
+const Kanban = require('../models/kanban');
+const Column = require('../models/column');
 
 // exports.getProject = async(req, res) =>{
 //     const projectId = req.params.projectId;
@@ -49,9 +50,20 @@ exports.createProject = async(req, res) =>{
         mentor: projectMentor
     });
     const creater = await User.findByPk(userId);
-    await createdProject.addUser(creater)
-    .then(result =>{
-        res.status(200).json({ project: result})
+    const userProjectAssociations = await createdProject.addUser(creater)
+    const createdProjectId =  userProjectAssociations[0].projectId;
+    //initailize kanban
+    const kanban = await Kanban.create({column:[], projectId:createdProjectId});
+    const todo = await Column.create({name:"待處理", task:[], kanbanId:kanban.id});
+    const inProgress = await Column.create({name:"進行中", task:[], kanbanId:kanban.id});
+    const Completed = await Column.create({name:"完成", task:[], kanbanId:kanban.id});
+    Kanban.findByPk(kanban.id)
+    .then(kanban =>{
+        kanban.column = [todo.id, inProgress.id, Completed.id ];
+        return kanban.save();
+    })
+    .then(() =>{
+        res.status(200).send({message: 'create success!'})
     })
     .catch(err => console.log(err));
 }

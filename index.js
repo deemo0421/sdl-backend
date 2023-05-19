@@ -9,6 +9,7 @@ const http = require('http');
 const {Server} = require('socket.io');
 const { Socket } = require('dgram');
 const server = http.createServer(app);
+const Task = require('./models/task');
 
 const io = new Server(server, {
     cors:{
@@ -42,37 +43,51 @@ app.use(bodyParser.urlencoded({ extended: false }));
 io.on("connection", (socket) => {
     console.log(`${socket.id} a user connected`);
     //create card
-    socket.on("cardItemCreated", (data) => {
-        const { selectedcolumn, item } = data;
-        kanbanData[selectedcolumn].items.push(item);
-        io.sockets.emit("cardItems", kanbanData);
+    socket.on("taskItemCreated", async (data) => {
+        const { selectedcolumn, item, kanbanData } = data;
+        kanbanData[selectedcolumn].task.push(item);
+        const { title, content, labels, assignees } = item;
+        const creatTask = await Task.create({
+            id: 111,
+            title: title,
+            content: content,
+            labels: labels,
+            assignees: assignees,
+            columnId : kanbanData[selectedcolumn].id
+        }).then(
+            result => {
+                console.log(result)
+                io.sockets.emit("taskItems", result);
+            }
+        )
+        
     })
     //update card
     socket.on("cardUpdated", (data) =>{
-        const { cardData, index, columnIndex} = data;
-        kanbanData[columnIndex].items.splice(index, 1);
-        kanbanData[columnIndex].items.splice(
+        const { cardData, index, columnIndex, kanbanData} = data;
+        kanbanData[columnIndex].task.splice(index, 1);
+        kanbanData[columnIndex].task.splice(
             index,
             0,
             cardData
         );
-        io.sockets.emit("cardItem", kanbanData);
+        io.sockets.emit("taskItem", kanbanData);
     })
     //delete card
     
     //drag card
     socket.on("cardItemDragged", (data) => {
-        const { destination, source } = data;
+        const { destination, source, kanbanData } = data;
         const dragItem = {
-            ...kanbanData[source.droppableId].items[source.index],
+            ...kanbanData[source.droppableId].task[source.index],
         };
-        kanbanData[source.droppableId].items.splice(source.index, 1);
-        kanbanData[destination.droppableId].items.splice(
+        kanbanData[source.droppableId].task.splice(source.index, 1);
+        kanbanData[destination.droppableId].task.splice(
             destination.index,
             0,
             dragItem
         );
-        io.sockets.emit("cardItems", kanbanData);
+        io.sockets.emit("taskItems", kanbanData);
     });
 
     socket.on("disconnect", () => {

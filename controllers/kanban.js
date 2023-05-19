@@ -7,50 +7,111 @@ exports.getKanban = async ( req, res ) => {
     const projectId = req.params.projectId;
     //kanban
     const kanbanData = await Kanban.findAll({
-        attributes:['id','column'],
+        attributes:[
+            'id',
+            'column'],
         where:{
             projectId : projectId
         },
     })
     const { id, column } = kanbanData[0];
+
     //column
     const columnData = await Column.findAll({
-            attributes:['id','name','task'],
+            attributes:[
+                'id',
+                'name',
+                'task'
+            ],
             where:{
                 kanbanId : id
             }
     })
-    console.log(columnData[0]);
+    const sortedColumnData = [];
+    const arrone = columnData.findIndex( item => item.id === column[0]);
+    sortedColumnData.push(columnData[arrone]);
+    const arrtwo = columnData.findIndex( item => item.id === column[1]);
+    sortedColumnData.push(columnData[arrtwo]);
+    const arrthree = columnData.findIndex( item => item.id === column[2]);
+    sortedColumnData.push(columnData[arrthree]);
     //task
     const taskData1 = await Task.findAll({
-        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        attributes:[
+            'id', 
+            'title', 
+            'content', 
+            'labels', 
+            'assignees'
+        ],
         where:{
-            columnId : columnData[0].id
+            columnId : sortedColumnData[0].id
         }
     })
-    columnData[0].task = taskData1;
+    const sortTaskData1 = [];
+    sortedColumnData[0].task.map( column => {
+        taskData1.map((task, index) => {
+            if(task.id === column){
+                sortTaskData1.push(taskData1[index])
+            }
+        })
+    })
+    sortedColumnData[0].task = sortTaskData1;
     const taskData2 = await Task.findAll({
-        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        attributes:[
+            'id', 
+            'title', 
+            'content', 
+            'labels', 
+            'assignees'
+        ],
         where:{
-            columnId : columnData[1].id
+            columnId : sortedColumnData[1].id
         }
     })
-    columnData[1].task = taskData2;
+    const sortTaskData2 = [];
+    sortedColumnData[1].task.map(column => {
+        taskData2.map((task, index) => {
+            if(task.id === column){
+                sortTaskData2.push(taskData2[index])
+            }
+        })
+    })
+    sortedColumnData[1].task = sortTaskData2;
     const taskData3 = await Task.findAll({
-        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        attributes:[
+            'id', 
+            'title', 
+            'content', 
+            'labels', 
+            'assignees'
+        ],
         where:{
-            columnId : columnData[2].id
+            columnId : sortedColumnData[2].id
         }
     })
-    columnData[2].task = taskData3;
-    res.status(200).json(columnData);
+    const sortTaskData3 = [];
+    sortedColumnData[2].task.map(column => {
+        taskData3.map((task, index) => {
+            if(task.id === column){
+                sortTaskData3.push(taskData3[index])
+            }
+        })
+    })
+    sortedColumnData[2].task = sortTaskData3;
+    res.status(200).json(sortedColumnData);
 
 }
 
 exports.getKanbanTask = async ( req, res ) =>{
     const columnId = req.params.columnId;
     const taskData = await Task.findAll({
-        attributes:['id', 'title', 'content', 'labels', 'assignees'],
+        attributes:[
+            'id', 
+            'title', 
+            'content', 
+            'labels', 
+            'assignees'
+        ],
         where:{
             columnId : columnId
         }
@@ -63,26 +124,34 @@ exports.getKanbanTask = async ( req, res ) =>{
         res.status(500).send({message: 'Something Wrong!'})
     });
 }
-exports.createKanban = async ( req, res ) => {
-    const projectId = req.body.projectId;
-    const kanban = await Kanban.create({column:[], projectId:projectId});
-    const todo = await Column.create({name:"待處理", task:[], kanbanId:kanban.id});
-    const inProgress = await Column.create({name:"進行中", task:[], kanbanId:kanban.id});
-    const Completed = await Column.create({name:"完成", task:[], kanbanId:kanban.id});
+exports.createKanban = async ( projectId ) => {
+    const kanban = await Kanban.create({
+        column:[], 
+        projectId:projectId
+    });
+    const todo = await Column.create({
+        name:"待處理", 
+        task:[], 
+        kanbanId:kanban.id
+    });
+    const inProgress = await Column.create({
+        name:"進行中", 
+        task:[], 
+        kanbanId:kanban.id
+    });
+    const Completed = await Column.create({
+        name:"完成", 
+        task:[], 
+        kanbanId:kanban.id
+    });
     Kanban.findByPk(kanban.id)
-        .then(kanban =>{
-            kanban.column = [todo.id, inProgress.id, Completed.id ];
-            return kanban.save();
-        })
-        .then(() => {
-            res.status(200).json({message: 'kanban created!'});
-        })
-        .catch(err => console.log(err));
-    
-    
-    // await Kanban.create({
-    //     column:[],
-    //     projectId:projectId
-    // }).then(result => console.log(result))
-    // .catch(err => console.log(err));
+    .then(kanban =>{
+        kanban.column = [
+            todo.id, 
+            inProgress.id, 
+            Completed.id 
+        ];
+        return kanban.save();
+    })
 }
+
