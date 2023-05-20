@@ -10,6 +10,7 @@ const {Server} = require('socket.io');
 const { Socket } = require('dgram');
 const server = http.createServer(app);
 const Task = require('./models/task');
+const Column = require('./models/column');
 
 const io = new Server(server, {
     cors:{
@@ -45,38 +46,34 @@ io.on("connection", (socket) => {
     //create card
     socket.on("taskItemCreated", async (data) => {
         const { selectedcolumn, item, kanbanData } = data;
-        kanbanData[selectedcolumn].task.push(item);
         const { title, content, labels, assignees } = item;
         const creatTask = await Task.create({
-            id: 111,
             title: title,
             content: content,
             labels: labels,
             assignees: assignees,
             columnId : kanbanData[selectedcolumn].id
-        }).then(
-            result => {
-                console.log(result)
-                io.sockets.emit("taskItems", result);
-            }
-        )
-        
+        })
+        const  addIntoTaskArray = await Column.findByPk(creatTask.columnId)
+        addIntoTaskArray.task = [...addIntoTaskArray.task, creatTask.id];
+        await addIntoTaskArray.save()
+        .then(()=>console.log("success"))
+        io.sockets.emit("taskItems", addIntoTaskArray);
     })
     //update card
-    socket.on("cardUpdated", (data) =>{
+    socket.on("cardUpdated", async(data) =>{
         const { cardData, index, columnIndex, kanbanData} = data;
-        kanbanData[columnIndex].task.splice(index, 1);
-        kanbanData[columnIndex].task.splice(
-            index,
-            0,
-            cardData
-        );
-        io.sockets.emit("taskItem", kanbanData);
+        const updateTask = await Task.update(cardData,{
+            where:{
+                id : cardData.id
+            }
+        });
+        io.sockets.emit("taskItem", updateTask);
     })
     //delete card
     
     //drag card
-    socket.on("cardItemDragged", (data) => {
+    socket.on("cardItemDragged", async(data) => {
         const { destination, source, kanbanData } = data;
         const dragItem = {
             ...kanbanData[source.droppableId].task[source.index],
@@ -87,7 +84,24 @@ io.on("connection", (socket) => {
             0,
             dragItem
         );
-        io.sockets.emit("taskItems", kanbanData);
+        io.sockets.emit("dragtaskItem", kanbanData);
+        const sourceColumn = kanbanData[source.droppableId].task.map( item => item.id);
+        const destinationColumn = kanbanData[destination.droppableId].task.map( item => item.id);
+        await Column.update({task:sourceColumn},{
+            where:{
+                id: kanbanData[source.droppableId].id
+            }
+        });
+        await Column.update({task:destinationColumn},{
+            where:{
+                id: kanbanData[destination.droppableId].id
+            }
+        });
+        await Task.update({columnId:kanbanData[destination.droppableId].id},{
+            where:{
+                id: dragItem.id
+            }
+        });
     });
 
     socket.on("disconnect", () => {

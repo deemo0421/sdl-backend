@@ -14,6 +14,9 @@ exports.getKanban = async ( req, res ) => {
             projectId : projectId
         },
     })
+    if(!kanbanData){
+        res.status(500).send({message: 'NoRecord!'})
+    }
     const { id, column } = kanbanData[0];
 
     //column

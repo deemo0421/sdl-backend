@@ -73,11 +73,14 @@ exports.registerUser = (req, res) => {
             role:role
         })
         .then(result => {
-            console.log('Created User');
-            res.status(201).json({
-                message: 'User created successfully!',
-                user: result
-            });
+            const username = result.username;
+            const id = result.id;
+            const accessToken = sign(
+                    {username: username, id:id}, 
+                    "importantsecret"
+            );
+            console.log(result);
+            res.status(201).json({accessToken, username, id});
         })
         .catch(err => console.log(err));
     }); 

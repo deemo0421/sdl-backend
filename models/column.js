@@ -8,7 +8,7 @@ const Column = sequelize.define('column', {
         allowNull:false
     }, 
     task: {
-        type: DataTypes.ARRAY(DataTypes.JSONB),
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull:true
     },  
 });

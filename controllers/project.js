@@ -43,17 +43,18 @@ exports.createProject = async(req, res) =>{
     const projectName = req.body.projectName;
     const projectdescribe = req.body.projectdescribe;
     const projectMentor = req.body.projectMentor;
-    const userId = req.body.userId;
     const createdProject = await Project.create({
         name: projectName,
         describe: projectdescribe,
         mentor: projectMentor
     });
+    const userId = req.body.userId;
+    console.log(userId);
     const creater = await User.findByPk(userId);
-    const userProjectAssociations = await createdProject.addUser(creater)
-    const createdProjectId =  userProjectAssociations[0].projectId;
+    const userProjectAssociations = await createdProject.addUser(creater);
+
     //initailize kanban
-    const kanban = await Kanban.create({column:[], projectId:createdProjectId});
+    const kanban = await Kanban.create({column:[], projectId:createdProject.id});
     const todo = await Column.create({name:"待處理", task:[], kanbanId:kanban.id});
     const inProgress = await Column.create({name:"進行中", task:[], kanbanId:kanban.id});
     const Completed = await Column.create({name:"完成", task:[], kanbanId:kanban.id});
