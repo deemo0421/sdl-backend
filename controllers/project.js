@@ -2,6 +2,7 @@ const Project = require('../models/project')
 const User = require('../models/user')
 const Kanban = require('../models/kanban');
 const Column = require('../models/column');
+const shortid = require('shortid')
 
 // exports.getProject = async(req, res) =>{
 //     const projectId = req.params.projectId;
@@ -13,7 +14,7 @@ const Column = require('../models/column');
 //         .catch(err => console.log(err));
 // }
 
-exports.getAllProject = async(req, res) =>{
+exports.getAllProject = async(req, res) => {
     const userId = req.query.userId;
     await Project.findAll({ 
         include:[{
@@ -39,17 +40,21 @@ exports.getAllProject = async(req, res) =>{
     //     .catch(err => console.log(err));
 }
 
-exports.createProject = async(req, res) =>{
+exports.createProject = async(req, res) => {
     const projectName = req.body.projectName;
     const projectdescribe = req.body.projectdescribe;
     const projectMentor = req.body.projectMentor;
+    const referral_code = shortid.generate();
+    if(!projectName || !projectdescribe){
+        return res.status(404).send({message: 'please enter project Name or project describe!'})
+    }
     const createdProject = await Project.create({
         name: projectName,
         describe: projectdescribe,
-        mentor: projectMentor
+        mentor: projectMentor,
+        referral_code: referral_code
     });
     const userId = req.body.userId;
-    console.log(userId);
     const creater = await User.findByPk(userId);
     const userProjectAssociations = await createdProject.addUser(creater);
 
@@ -69,7 +74,34 @@ exports.createProject = async(req, res) =>{
     .catch(err => console.log(err));
 }
 
-// exports.updateProject = async(req, res) =>{
+exports.inviteForProject = async( req, res) => {
+    const referral_Code = req.body.referral_Code;
+    const userId = req.body.userId;
+    if(!referral_Code){
+        return res.status(404).send({message: 'please enter referral code!'})
+    }
+    const referralProject = await Project.findOne({
+        where:{
+            referral_Code:referral_Code
+        }
+    })
+    .then(() => {
+        if(referralProject){
+            const invited = User.findByPk(userId);
+            const userProjectAssociations = referralProject.addUser(invited);
+            return res.status(200).send({message: 'invite success!'})
+        }else{
+            return res.status(404).json({ message: 'invite failed!' });
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).send({message: 'Wrong referral Code!'})
+    });
+
+}
+
+// exports.updateProject = async(req, res) => {
 //     const projectId = req.body.projectId;
 //     const projectName = req.body.projectName;
 //     const projectdescribe = req.body.projectdescribe;
@@ -92,7 +124,7 @@ exports.createProject = async(req, res) =>{
 //     .catch(err => console.log(err));
 // }
 
-// exports.deleteProject = async(req, res) =>{
+// exports.deleteProject = async(req, res) => {
 //     const projectId = req.body.projectId;
 //     User.findByPk(projectId)
 //         .then(project =>{

@@ -21,6 +21,10 @@ const Project = sequelize.define('project', {
         type: DataTypes.STRING,
         allowNull:false
     },
+    referral_code:{
+        type:DataTypes.STRING,
+        allowNull:true
+    }
 });
 
 Project.hasMany(Chatroom_message);

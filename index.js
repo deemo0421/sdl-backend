@@ -103,7 +103,6 @@ io.on("connection", (socket) => {
             }
         });
     });
-
     socket.on("disconnect", () => {
         console.log(`${socket.id} a user disconnected`)
     });
@@ -127,7 +126,7 @@ app.use((error, req, res, next) => {
 });
 
 // sync database
-sequelize.sync()
+sequelize.sync({alter:true})  //{force:true} {alter:true}
     .then(result => {
     console.log("Database connected");
     server.listen(3000);
