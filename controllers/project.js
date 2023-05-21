@@ -4,15 +4,15 @@ const Kanban = require('../models/kanban');
 const Column = require('../models/column');
 const shortid = require('shortid')
 
-// exports.getProject = async(req, res) =>{
-//     const projectId = req.params.projectId;
-//     Project.findByPk(projectId)
-//         .then(result =>{
-//             console.log(result);
-//             res.status(200).json({ project: result})
-//         })
-//         .catch(err => console.log(err));
-// }
+exports.getProject = async(req, res) =>{
+    const projectId = req.params.projectId;
+    await Project.findByPk(projectId)
+        .then(result =>{
+            console.log(result);
+            res.status(200).json(result)
+        })
+        .catch(err => console.log(err));
+}
 
 exports.getAllProject = async(req, res) => {
     const userId = req.query.userId;
@@ -77,26 +77,23 @@ exports.createProject = async(req, res) => {
 exports.inviteForProject = async( req, res) => {
     const referral_Code = req.body.referral_Code;
     const userId = req.body.userId;
+    console.log(userId);
     if(!referral_Code){
         return res.status(404).send({message: 'please enter referral code!'})
     }
     const referralProject = await Project.findOne({
         where:{
-            referral_Code:referral_Code
+            referral_code:referral_Code
         }
     })
+    const invited = await User.findByPk(userId);
+    const userProjectAssociations = await referralProject.addUser(invited)
     .then(() => {
-        if(referralProject){
-            const invited = User.findByPk(userId);
-            const userProjectAssociations = referralProject.addUser(invited);
             return res.status(200).send({message: 'invite success!'})
-        }else{
-            return res.status(404).json({ message: 'invite failed!' });
-        }
     })
     .catch(err => {
         console.log(err);
-        res.status(500).send({message: 'Wrong referral Code!'})
+        res.status(500).send({message: 'invite failed!'})
     });
 
 }

@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Project = require('../models/project');
 const bcypt  = require('bcrypt');
 const saltRounds = 10;
 const {sign} = require('jsonwebtoken');
@@ -87,46 +88,65 @@ exports.registerUser = (req, res) => {
 }
 
 //update user
-exports.updateUser = (req, res) => {
-    const userId = req.body.userId;
-    const updatedusername = req.body.username;
-    const updatedpassword = req.body.password;
-    bcypt.hash(updatedpassword, saltRounds, (err, hash) => {
-        if(err){
-            console.log(err)
-        };
-        User.findByPk(userId)
-        .then(user => {
-        if (!user) {
-            return res.status(404).json({ message: 'User not found!' });
-        }
-        user.username = updatedusername;
-        user.password = hash;
-        return user.save();
-        })
-        .then(result => {
-        res.status(200).json({message: 'User updated!'});
-        })
-        .catch(err => console.log(err));
+// exports.updateUser = (req, res) => {
+//     const userId = req.body.userId;
+//     const updatedusername = req.body.username;
+//     const updatedpassword = req.body.password;
+//     bcypt.hash(updatedpassword, saltRounds, (err, hash) => {
+//         if(err){
+//             console.log(err)
+//         };
+//         User.findByPk(userId)
+//         .then(user => {
+//         if (!user) {
+//             return res.status(404).json({ message: 'User not found!' });
+//         }
+//         user.username = updatedusername;
+//         user.password = hash;
+//         return user.save();
+//         })
+//         .then(result => {
+//         res.status(200).json({message: 'User updated!'});
+//         })
+//         .catch(err => console.log(err));
+//     })
+// }
+
+exports.getProjectUsers = async(req, res) => {
+    const projectId = req.params.projectId;
+    await User.findAll({
+        attributes: ['id', 'username'],
+        include: [{
+            model:Project,
+            attributes:[],
+            where :{
+            id:projectId
+        },
+        }]
     })
+    .then(result =>{
+        console.log(result);
+        res.status(200).json(result)
+    })
+    .catch(err => console.log(err));
 }
 
 // delete user
-exports.deleteUser = (req, res) => {
-    const userId = req.body.userId;
-    User.findByPk(userId)
-        .then(user => {
-            if (!user) {
-                return res.status(404).json({ message: 'User not found!' });
-            }
-            return User.destroy({
-                where: {
-                id: userId
-                }
-            });
-        })
-        .then(result => {
-            res.status(200).json({ message: 'User deleted!' });
-        })
-        .catch(err => console.log(err));
-}
+// exports.deleteUser = (req, res) => {
+//     const userId = req.body.userId;
+//     User.findByPk(userId)
+//         .then(user => {
+//             if (!user) {
+//                 return res.status(404).json({ message: 'User not found!' });
+//             }
+//             return User.destroy({
+//                 where: {
+//                 id: userId
+//                 }
+//             });
+//         })
+//         .then(result => {
+//             res.status(200).json({ message: 'User deleted!' });
+//         })
+//         .catch(err => console.log(err));
+// }
