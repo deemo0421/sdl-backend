@@ -11,6 +11,8 @@ const { Socket } = require('dgram');
 const server = http.createServer(app);
 const Task = require('./models/task');
 const Column = require('./models/column');
+const Node = require('./models/node');
+const Node_relation = require('./models/node_relation');
 
 const io = new Server(server, {
     cors:{
@@ -70,8 +72,6 @@ io.on("connection", (socket) => {
         });
         io.sockets.emit("taskItem", updateTask);
     })
-    //delete card
-    
     //drag card
     socket.on("cardItemDragged", async(data) => {
         const { destination, source, kanbanData } = data;
@@ -103,6 +103,51 @@ io.on("connection", (socket) => {
             }
         });
     });
+    //create nodes
+    socket.on("nodeCreate", async(data) =>{
+        const { title, content, ideaWallId, owner, from_id } = data;
+        const createdNode = await Node.create({
+            title:title,
+            content:content,
+            ideaWallId:ideaWallId,
+            owner:owner
+        });
+        if(from_id){
+            const nodeRelation = await Node_relation.create({
+                from_id:from_id,
+                to_id: createdNode.id,
+                ideaWallId:ideaWallId
+            })
+        }
+        io.sockets.emit("nodeUpdated", createdNode);
+    })
+
+    socket.on("nodeUpdate", async(data) =>{
+        const { title, content, id} = data;
+        const createdNode = await Node.update(
+            {
+                title:title,
+                content:content
+            },
+            {
+                where:{
+                    id: id
+                }
+            }
+        );
+        io.sockets.emit("nodeUpdated", createdNode);
+    })
+    socket.on("nodeDelete", async(data) =>{
+        const {id} = data;
+        const deleteNode = await Node.destroy(
+            {
+                where:{
+                    id: id
+                }
+            }
+        );
+        io.sockets.emit("nodeUpdated", deleteNode);
+    })
     socket.on("disconnect", () => {
         console.log(`${socket.id} a user disconnected`)
     });
@@ -112,10 +157,12 @@ io.on("connection", (socket) => {
 app.use('/users', require('./routes/user'));
 app.use('/projects', require('./routes/project'))
 app.use('/kanbans', require('./routes/kanban'))
+app.use('/ideaWall', require('./routes/ideaWall'))
+app.use('/node', require('./routes/node'))
 
-app.get("/ideaWall", (req, res) => {
-    res.json(ideaWall);
-});
+// app.get("/ideaWall", (req, res) => {
+//     res.json(ideaWall);
+// });
 
 //error handling
 app.use((error, req, res, next) => {
