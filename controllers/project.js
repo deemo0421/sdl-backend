@@ -52,7 +52,8 @@ exports.createProject = async(req, res) => {
         name: projectName,
         describe: projectdescribe,
         mentor: projectMentor,
-        referral_code: referral_code
+        referral_code: referral_code,
+        mainStage:"1-1"
     });
     const userId = req.body.userId;
     const creater = await User.findByPk(userId);
@@ -93,7 +94,7 @@ exports.inviteForProject = async( req, res) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).send({message: 'invite failed!'})
+        return res.status(500).send({message: 'invite failed!'})
     });
 
 }

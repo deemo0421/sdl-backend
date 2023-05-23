@@ -7,6 +7,7 @@ const Daily_personal = require('./daily_personal');
 const Daily_team = require('./daily_team');
 const Chatroom_message = require('./chatroom_message');
 const Kanban = require('./kanban');
+const Submit = require('./submit');
 
 const Project = sequelize.define('project', {
     name: {
@@ -24,6 +25,10 @@ const Project = sequelize.define('project', {
     referral_code:{
         type:DataTypes.STRING,
         allowNull:true
+    },
+    mainStage:{
+        type:DataTypes.STRING,
+        allowNull:true
     }
 });
 
@@ -34,5 +39,6 @@ Project.hasMany(Process);
 Project.hasMany(Daily_personal);
 Project.hasMany(Daily_team);
 Project.hasOne(Kanban);
+Project.hasOne(Submit);
 
 module.exports = Project;
