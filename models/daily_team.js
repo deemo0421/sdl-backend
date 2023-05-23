@@ -16,10 +16,14 @@ const Daily_team = sequelize.define('daily_team', {
     },
     filename:{
         type: DataTypes.TEXT,
-        allowNull:false,
+        allowNull:true,
     },
     filepath:{
         type: DataTypes.TEXT,
+        allowNull:true,
+    }, 
+    type:{
+        type: DataTypes.STRING,
         allowNull:false,
     }
 });

@@ -12,11 +12,11 @@ const Daily_personal = sequelize.define('daily_personal', {
     },
     filename:{
         type: DataTypes.TEXT,
-        allowNull:false,
+        allowNull:true,
     },
     filepath:{
         type: DataTypes.TEXT,
-        allowNull:false,
+        allowNull:true,
     }
 });
 
