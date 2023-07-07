@@ -3,6 +3,7 @@ const User = require('../models/user')
 const Kanban = require('../models/kanban');
 const Column = require('../models/column');
 const shortid = require('shortid')
+const Idea_wall = require('../models/idea_wall')
 
 exports.getProject = async(req, res) =>{
     const projectId = req.params.projectId;
@@ -64,10 +65,17 @@ exports.createProject = async(req, res) => {
     const todo = await Column.create({name:"待處理", task:[], kanbanId:kanban.id});
     const inProgress = await Column.create({name:"進行中", task:[], kanbanId:kanban.id});
     const Completed = await Column.create({name:"完成", task:[], kanbanId:kanban.id});
-    Kanban.findByPk(kanban.id)
+    await Kanban.findByPk(kanban.id)
     .then(kanban =>{
         kanban.column = [todo.id, inProgress.id, Completed.id ];
         return kanban.save();
+    })
+    .catch(err => console.log(err));
+
+    await Idea_wall.create({
+        type:"project",
+        projectId:createdProject.id,
+        stage:"1-1"
     })
     .then(() =>{
         res.status(200).send({message: 'create success!'})

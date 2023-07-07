@@ -1,5 +1,6 @@
 const Submit = require('../models/submit')
 const Project = require('../models/project')
+const Idea_wall = require('../models/idea_wall');
 
 exports.createSubmit = async(req, res) => {
     const {stage, title, content, projectId} = req.body;
@@ -34,6 +35,11 @@ exports.createSubmit = async(req, res) => {
             projectId: projectId,
         })
     }
+    await Idea_wall.create({
+        type:"project",
+        projectId:projectId,
+        stage:"1-2"
+    })
     await Project.update({
         mainStage:"1-2"
     },{

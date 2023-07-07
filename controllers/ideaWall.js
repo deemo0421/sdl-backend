@@ -1,13 +1,17 @@
 const Idea_wall = require('../models/idea_wall');
+const { Op } = require("sequelize");
 
 //to do name change to stage substage
 exports.getIdeaWall = async(req, res) =>{
     const projectId = req.params.projectId;
-    const name = req.params.ideaWallname;
+    const stage = req.params.stage;
+    console.log("stage",stage);
     await Idea_wall.findOne({
         where:{
-            projectId:projectId,
-            name:name
+            [Op.and]: [
+                { projectId:projectId },
+                { stage:stage }
+            ]   
         }
     })
     .then(result =>{
