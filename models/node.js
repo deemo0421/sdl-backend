@@ -3,15 +3,15 @@ const sequelize = require('../util/database');
 
 const Node = sequelize.define('node', {
     title: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     content:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     owner:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     }
 });

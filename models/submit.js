@@ -3,19 +3,19 @@ const sequelize = require('../util/database');
 
 const Submit = sequelize.define('submit', {
     stage: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     title:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     content:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     filename:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:true,
     },
 });

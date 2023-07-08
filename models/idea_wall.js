@@ -5,15 +5,15 @@ const Node_relation = require('./node_relation')
 
 const Idea_wall = sequelize.define('idea_wall', {
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:true
     },
     type:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     stage:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:true
     }
 });

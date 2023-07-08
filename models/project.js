@@ -11,23 +11,23 @@ const Submit = require('./submit');
 
 const Project = sequelize.define('project', {
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     describe: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     mentor: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     referral_code:{
-        type:DataTypes.STRING,
+        type:DataTypes.TEXT,
         allowNull:true
     },
     mainStage:{
-        type:DataTypes.STRING,
+        type:DataTypes.TEXT,
         allowNull:true
     }
 });

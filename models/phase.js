@@ -4,11 +4,11 @@ const Sub_phase = require('./sub_phase');
 
 const Phase = sequelize.define('phase', {
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     sub_phase:{
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.ARRAY(DataTypes.TEXT),
         allowNull:false,
     }
 });

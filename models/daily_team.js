@@ -3,23 +3,23 @@ const sequelize = require('../util/database');
 
 const Daily_team = sequelize.define('daily_team', {
     stage: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     title:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     content:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     filename:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:true,
     },
     type:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     }
 });

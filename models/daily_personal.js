@@ -3,15 +3,15 @@ const sequelize = require('../util/database');
 
 const Daily_personal = sequelize.define('daily_personal', {
     title:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     content:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     filename:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:true,
     }
 });

@@ -9,15 +9,15 @@ const Tag = sequelize.define('tag', {
         primaryKey: true,
     },
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     }, 
     bg_color: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     text_color: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },   
 });

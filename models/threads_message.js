@@ -3,7 +3,7 @@ const sequelize = require('../util/database');
 
 const Threads_Message = sequelize.define('message', {
     messageText:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     }
 });

@@ -4,11 +4,11 @@ const Tag = require('./tag');
 
 const Task = sequelize.define('task', {
     title: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     }, 
     content: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     labels: {

@@ -7,15 +7,15 @@ const daily_personal = require('./daily_personal');
 
 const User = sequelize.define('user', {
     username: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     password: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     role: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },  
 });

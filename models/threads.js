@@ -4,11 +4,11 @@ const Threads_Message = require('./threads_message');
 
 const Threads = sequelize.define('threads',{
     title:{
-        type:DataTypes.STRING,
+        type:DataTypes.TEXT,
         allowNull:true
     },
     content:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:true
     }
 });

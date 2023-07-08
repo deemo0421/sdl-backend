@@ -4,7 +4,7 @@ const Task = require('./task');
 
 const Column = sequelize.define('column', {
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     }, 
     task: {

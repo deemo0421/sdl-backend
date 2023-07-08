@@ -2,11 +2,11 @@ const { DataTypes} = require('sequelize');
 const sequelize = require('../util/database');
 const Sub_phase = sequelize.define('sub_phase', {
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     discription:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
     userSubmit:{

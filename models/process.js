@@ -4,11 +4,11 @@ const Phase = require('./phase');
 
 const Process = sequelize.define('process', {
     phase: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.ARRAY(DataTypes.TEXT),
         allowNull:false,
     },
     name:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false,
     }
 });
