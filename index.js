@@ -257,28 +257,7 @@ app.use('/ideaWall', require('./routes/ideaWall'))
 app.use('/node', require('./routes/node'))
 app.use('/daily', require('./routes/daily'))
 app.use('/submit', require('./routes/submit'))
-
-// app.get("/ideaWall", (req, res) => {
-//     res.json(ideaWall);
-// });
-app.get("/stage/:subStage", (req, res) =>{
-    const mainStage = req.params.subStage;
-    if(mainStage === "1-1"){
-        const stageContent = {
-            "title":"1-1決定研究主題",
-            "describe":"在 1-1 的階段中，提出你感興趣的主題，並提供完整資訊分享給通組的夥伴，並在與小組討論完後，繳交上傳。"
-        };
-        return res.status(200).json(stageContent)
-    }else if(mainStage === "1-2"){
-        const stageContent = {
-            "title":"1-2決定研究題目",
-            "describe":"根據剛剛所想的研究主題，蒐集相關資料，並和組員討論出合適的題目。。"
-        };
-        return res.status(200).json(stageContent)
-    }else{
-        return res.status(404).send({message: 'stage error!'})
-    }
-})
+app.use('/stage', require('./routes/stage'))
 
 //error handling
 app.use((error, req, res, next) => {

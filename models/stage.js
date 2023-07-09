@@ -1,17 +1,17 @@
 const { DataTypes} = require('sequelize');
 const sequelize = require('../util/database');
-const Sub_phase = require('./sub_phase');
+const Sub_stage = require('./sub_stage');
 
-const Phase = sequelize.define('phase', {
+const Stage = sequelize.define('stage', {
     name: {
         type: DataTypes.TEXT,
         allowNull:false,
     },
-    sub_phase:{
-        type: DataTypes.ARRAY(DataTypes.TEXT),
+    sub_stage:{
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull:false,
     }
 });
-Phase.hasMany(Sub_phase);
+Stage.hasMany(Sub_stage);
 
-module.exports = Phase;
+module.exports = Stage;

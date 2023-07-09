@@ -26,8 +26,12 @@ const Project = sequelize.define('project', {
         type:DataTypes.TEXT,
         allowNull:true
     },
-    mainStage:{
-        type:DataTypes.TEXT,
+    currentStage:{
+        type:DataTypes.INTEGER,
+        allowNull:true
+    },
+    currentSubStage:{
+        type:DataTypes.INTEGER,
         allowNull:true
     }
 });
