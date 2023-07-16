@@ -6,12 +6,8 @@ const Submit = sequelize.define('submit', {
         type: DataTypes.TEXT,
         allowNull:false,
     },
-    title:{
-        type: DataTypes.TEXT,
-        allowNull:false,
-    },
     content:{
-        type: DataTypes.TEXT,
+        type: DataTypes.JSON,
         allowNull:false,
     },
     filename:{

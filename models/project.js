@@ -43,6 +43,6 @@ Project.hasMany(Process);
 Project.hasMany(Daily_personal);
 Project.hasMany(Daily_team);
 Project.hasOne(Kanban);
-Project.hasOne(Submit);
+Project.hasMany(Submit);
 
 module.exports = Project;
