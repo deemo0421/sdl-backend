@@ -9,7 +9,6 @@ const Stage = require('../models/stage');
 const Sub_stage = require('../models/sub_stage');
 
 exports.getProject = async(req, res) =>{
-    console.log("getproject");
     const projectId = req.params.projectId;
     await Project.findByPk(projectId)
         .then(result =>{

@@ -23,114 +23,6 @@ const io = new Server(server, {
     },
 });
 
-const inquirySubStage = [
-    {
-        "id":1,
-        "stageName": "形成問題",
-        "subStage":[
-            {
-                "index":1,
-                "subStagename":"決定研究主題"
-            },
-            {
-                "index":2,
-                "subStagename":"決定研究主題"
-            }
-        ]
-    },{
-        "id":2,
-        "stageName":"規劃",
-        "subStage":[
-            {
-                "index":1,
-                "subStagename":"提出研究問題"
-            },
-            {
-                "index":2,
-                "subStagename":"訂定研究構想表"
-            },
-            {
-                "index":3,
-                "subStagename":"設計研究記錄表格"
-            },
-            {
-                "index":4,
-                "subStagename":"進行嘗試性研究"
-            }
-        ]
-
-    },{
-        "id":3,
-        "stageName":"執行",
-        "subStage":[
-            {
-                "index":1,
-                "subStagename":"進行實驗並記錄"
-            },
-            {
-                "index":2,
-                "subStagename":"分析資料與繪圖"
-            },
-            {
-                "index":3,
-                "subStagename":"撰寫研究結果"
-            },
-            {
-                "index":4,
-                "subStagename":"進行嘗試性研究"
-            }
-        ]
-
-    },{
-        "id":4,
-        "stageName":"形成結論",
-        "subStage":[
-            {
-                "index":1,
-                "subStagename":"進行研究討論"
-            },
-            {
-                "index":2,
-                "subStagename":"撰寫研究結論"
-            }
-        ]
-    },{
-        "id":5,
-        "stageName":"展示與報告",
-        "subStage":[
-            {
-                "index":1,
-                "subStagename":"統整作品報告書"
-            },
-            {
-                "index":2,
-                "subStagename":"製作作品海報"
-            },
-            {
-                "index":3,
-                "subStagename":"影片整理"
-            },
-            {
-                "index":4,
-                "subStagename":"討論與省思"
-            }
-        ]
-    },{
-        "id":6,
-        "stageName":"製作學習歷程",
-        "subStage":[
-            {
-                "index":1,
-                "subStagename":"整理學習歷程"
-            },
-            {
-                "index":2,
-                "subStagename":"製作學習歷程"
-            }
-        ]
-    }
-]
-
 app.use(cors({
     origin: "http://127.0.0.1:5173",
     methods: ['GET', 'PUT', 'POST'],
@@ -141,6 +33,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 io.on("connection", (socket) => {
     console.log(`${socket.id} a user connected`);
+    //join room
+    socket.on("join_room", (data) =>{
+        socket.join(data);
+        console.log(`${socket.id} join room ${data}`);
+    })
+    //send message
+    socket.on("send_message", (data) =>{
+        console.log(data);
+        socket.to(data.room).emit("receive_message", data);
+    })
     //create card
     socket.on("taskItemCreated", async (data) => {
         const { selectedcolumn, item, kanbanData } = data;
@@ -169,7 +71,7 @@ io.on("connection", (socket) => {
         io.sockets.emit("taskItem", updateTask);
     })
     //drag card
-    socket.on("cardItemDragged", async(data) => {
+    socket.on("cardItemDragged", async(data) => { 
         const { destination, source, kanbanData } = data;
         const dragItem = {
             ...kanbanData[source.droppableId].task[source.index],

@@ -11,7 +11,6 @@ exports.createSubmit = async(req, res) => {
     if(!content){
         return res.status(404).send({message: 'please fill in the form !'})
     }
-    console.log(req.files);
     if(req.files.length > 0){
         req.files.map(item => {
             const filename = item.filename
@@ -51,7 +50,7 @@ exports.createSubmit = async(req, res) => {
             id:process[0].stage[currentStageInt-1]
         },
     })
-    console.log("stage[0].sub_stage.length",stage[0].sub_stage.length);
+
     if(currentSubStageInt+1 <= stage[0].sub_stage.length){
         await Project.update({
             currentSubStage:currentSubStageInt+1
@@ -72,6 +71,8 @@ exports.createSubmit = async(req, res) => {
             console.log(err);
             return res.status(500).send({message: 'create failed!'});
         })
+    }else if(currentStageInt === process[0].stage.length && currentSubStageInt === stage[0].sub_stage.length){
+        return res.status(200).send({message: 'done'});
     }else{
         await Project.update({
             currentStage:currentStageInt+1,
@@ -93,5 +94,30 @@ exports.createSubmit = async(req, res) => {
             console.log(err);
             return res.status(500).send({message: 'create failed!'});
         })
+    }
+}
+exports.getAllSubmit = async(req, res) => {
+    const { projectId } = req.query;
+    const allSubmit = await Submit.findAll({
+        where:{
+            projectId:projectId
+        }
+    })
+    if(allSubmit === null){
+        res.status(500).send({message: 'get protfolio failed!'});
+    }else{
+        res.status(200).json(allSubmit)
+    }
+}
+exports.getSubmit = async(req, res) => {
+    const submitId = req.params.submitId;
+    console.log("submitId",submitId);
+    const submit = await Submit.findByPk(submitId)
+    if(submit.filename === null){
+        console.log("null");
+        res.status(500).send({message: 'get protfolio failed!'});
+    }else{
+        console.log("dowwnload");
+        res.download(`./daily_file/${submit.filename}`)
     }
 }
