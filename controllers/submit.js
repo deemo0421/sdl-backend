@@ -60,9 +60,11 @@ exports.createSubmit = async(req, res) => {
             }
         })
         await Idea_wall.create({
+            name:`${currentStageInt}-${currentSubStageInt+1}想法牆`,
             type:"project",
             projectId:projectId,
-            stage:`${currentStageInt}-${currentSubStageInt+1}`
+            stage: currentStageInt,
+            subStage: currentSubStageInt+1
         })
         .then(() =>{
         return res.status(200).send({message: 'create success!'});
@@ -83,9 +85,11 @@ exports.createSubmit = async(req, res) => {
             }
         });
         await Idea_wall.create({
+            name:`${currentStageInt+1}-${currentSubStageInt}想法牆`,
             type:"project",
             projectId:projectId,
-            stage:`${currentStageInt+1}-${currentSubStageInt}`
+            stage: currentStageInt+1,
+            subStage: currentSubStageInt,
         })
         .then(() =>{
         return res.status(200).send({message: 'create success!'});

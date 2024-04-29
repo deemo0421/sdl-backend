@@ -64,7 +64,7 @@ exports.createProject = async(req, res) => {
     const creater = await User.findByPk(userId);
     const userProjectAssociations = await createdProject.addUser(creater);
 
-    //initailize kanban
+    //initailize & create kanban
     const kanban = await Kanban.create({column:[], projectId:createdProject.id});
     const todo = await Column.create({name:"待處理", task:[], kanbanId:kanban.id});
     const inProgress = await Column.create({name:"進行中", task:[], kanbanId:kanban.id});
@@ -75,17 +75,19 @@ exports.createProject = async(req, res) => {
         return kanban.save();
     })
     .catch(err => console.log(err));
-
+    //initailize & create Idea_wall
     await Idea_wall.create({
+        name:`${createdProject.currentStage}-${createdProject.currentSubStage}想法牆`,
         type:"project",
         projectId:createdProject.id,
-        stage:`${createdProject.currentStage}-${createdProject.currentSubStage}`
+        stage: createdProject.currentStage,
+        subStage: createdProject.currentSubStage,
+        
     })
     .then(() =>{
         res.status(200).send({message: 'create success!'})
     })
     .catch(err => console.log(err));
-
     //initailize process
     const process = await Process.create({
         stage:[],

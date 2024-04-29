@@ -15,6 +15,10 @@ const Idea_wall = sequelize.define('idea_wall', {
     stage:{
         type: DataTypes.TEXT,
         allowNull:true
+    },
+    subStage:{
+        type: DataTypes.TEXT,
+        allowNull:true
     }
 });
 Idea_wall.hasMany(Node);

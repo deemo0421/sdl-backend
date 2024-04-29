@@ -17,14 +17,14 @@ const { rm } = require('fs');
 
 const io = new Server(server, {
     cors:{
-        origin: "http://127.0.0.1:5173",
+        origin: "http://localhost:5173",
         methods: ['GET', 'PUT', 'POST'],
         credentials: true
     },
 });
 
 app.use(cors({
-    origin: "http://127.0.0.1:5173",
+    origin: "http://localhost:5173",
     methods: ['GET', 'PUT', 'POST'],
     credentials: true
 }));
@@ -170,14 +170,9 @@ app.use((error, req, res, next) => {
 });
 
 // sync database
-sequelize.sync({alter:true})  //{force:true} {alter:true}
-    .then(result => {
+sequelize.sync({alter:true})
+    .then(() => {
     console.log("Database connected");
     server.listen(3000);
     })
     .catch(err => console.log(err));
-
-
-// server.listen(3000, () => {
-//     console.log('server is running');
-// });

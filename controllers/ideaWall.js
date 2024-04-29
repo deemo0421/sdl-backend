@@ -5,12 +5,14 @@ const { Op } = require("sequelize");
 exports.getIdeaWall = async(req, res) =>{
     const projectId = req.params.projectId;
     const stage = req.params.stage;
+    const subStage = req.params.subStage;
     console.log("stage",stage);
     await Idea_wall.findOne({
         where:{
             [Op.and]: [
                 { projectId:projectId },
-                { stage:stage }
+                { stage:stage },
+                { subStage:subStage}
             ]   
         }
     })
