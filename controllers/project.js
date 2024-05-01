@@ -12,7 +12,6 @@ exports.getProject = async(req, res) =>{
     const projectId = req.params.projectId;
     await Project.findByPk(projectId)
         .then(result =>{
-            console.log(result);
             res.status(200).json(result)
         })
         .catch(err => console.log(err));
@@ -30,7 +29,6 @@ exports.getAllProject = async(req, res) => {
         }] 
     })
     .then(result =>{
-        console.log(result);
         res.status(200).json(result)
     })
     .catch(err => console.log(err));
