@@ -58,17 +58,17 @@ io.on("connection", (socket) => {
         addIntoTaskArray.task = [...addIntoTaskArray.task, creatTask.id];
         await addIntoTaskArray.save()
         .then(()=>console.log("success"))
-        io.sockets.emit("taskItems", addIntoTaskArray);
+        io.sockets.emit("createTaskItem", addIntoTaskArray);
     })
     //update card
     socket.on("cardUpdated", async(data) =>{
-        const { cardData, index, columnIndex, kanbanData} = data;
+        const { cardData } = data;
         const updateTask = await Task.update(cardData,{
             where:{
                 id : cardData.id
             }
         });
-        io.sockets.emit("taskItem", updateTask);
+        io.sockets.emit("UpdateTaskItem", updateTask);
     })
     //drag card
     socket.on("cardItemDragged", async(data) => { 
